@@ -9,6 +9,14 @@ declare module 'react-native-keychain' {
     password: string;
   }
 
+  export interface AllCredentials {
+    results: UserCredentials[];
+  }
+
+  export interface AllCredentialsKeys {
+    results: string[];
+  }
+
   export interface SharedWebCredentials extends UserCredentials {
     server: string;
   }
@@ -110,6 +118,10 @@ declare module 'react-native-keychain' {
     server: string,
     options?: Options
   ): Promise<false | SharedWebCredentials>;
+
+  function getAllInternetCredentials(): Promise<false | AllCredentials>;
+
+  function getAllInternetCredentialsKeys(): Promise<false | AllCredentialsKeys>;
 
   function resetInternetCredentials(
     server: string,

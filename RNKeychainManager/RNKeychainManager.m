@@ -271,6 +271,93 @@ SecAccessControlCreateFlags accessControlValue(NSDictionary *options)
   return SecItemDelete((__bridge CFDictionaryRef) query);
 }
 
+RCT_EXPORT_METHOD(getAllInternetCredentialsForServer:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSDictionary *query = @{
+    (__bridge NSString *)kSecClass: (__bridge id)(kSecClassInternetPassword),
+    (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
+    (__bridge NSString *)kSecReturnData: (__bridge id)kCFBooleanTrue,
+    (__bridge NSString *)kSecMatchLimit: (__bridge NSString *)kSecMatchLimitAll
+  };
+
+  // Look up server in the keychain
+  NSArray *found = nil;
+  CFTypeRef foundTypeRef = NULL;
+  OSStatus osStatus = SecItemCopyMatching((__bridge CFDictionaryRef) query, (CFTypeRef*)&foundTypeRef);
+
+  if (osStatus != noErr && osStatus != errSecItemNotFound) {
+    NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:osStatus userInfo:nil];
+    return rejectWithError(reject, error);
+  }
+
+  found = (__bridge NSArray*)(foundTypeRef);
+  if (!found) {
+    return resolve(@(NO));
+  }
+
+  NSMutableArray *results = [@[] mutableCopy];
+
+
+    for(int i=0; i< found.count; i++){
+        NSDictionary *item  = found[i];
+        NSString *server = (NSString *) [item objectForKey:(__bridge id)(kSecAttrServer)];
+        NSString *username = (NSString *) [item objectForKey:(__bridge id)(kSecAttrAccount)];
+        NSString *password = [[NSString alloc] initWithData:[item objectForKey:(__bridge id)(kSecValueData)] encoding:NSUTF8StringEncoding];
+
+        [results addObject:@{@"username": username, @"password":password, @"server": server}];
+  }
+
+
+  CFRelease(foundTypeRef);
+
+  return resolve(@{
+    @"results": results
+  });
+
+}
+
+RCT_EXPORT_METHOD(getAllInternetCredentialsKeys:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSDictionary *query = @{
+    (__bridge NSString *)kSecClass: (__bridge id)(kSecClassInternetPassword),
+    (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
+    (__bridge NSString *)kSecMatchLimit: (__bridge NSString *)kSecMatchLimitAll
+  };
+
+  // Look up all the keys in the keychain
+  NSArray *found = nil;
+  CFTypeRef foundTypeRef = NULL;
+  OSStatus osStatus = SecItemCopyMatching((__bridge CFDictionaryRef) query, (CFTypeRef*)&foundTypeRef);
+
+  if (osStatus != noErr && osStatus != errSecItemNotFound) {
+    NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:osStatus userInfo:nil];
+    return rejectWithError(reject, error);
+  }
+
+  found = (__bridge NSArray*)(foundTypeRef);
+  if (!found) {
+    return resolve(@(NO));
+  }
+
+  NSMutableArray *results = [@[] mutableCopy];
+
+
+  for(int i=0; i< found.count; i++){
+      NSDictionary *item  = found[i];
+      NSString *username = (NSString *) [item objectForKey:(__bridge id)(kSecAttrAccount)];
+      [results addObject:username];
+  }
+
+
+  CFRelease(foundTypeRef);
+
+  return resolve(@{
+    @"results": results
+  });
+
+}
+
+
 -(NSArray<NSString*>*)getAllServicesForSecurityClasses:(NSArray *)secItemClasses
 {
   NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObjectsAndKeys:

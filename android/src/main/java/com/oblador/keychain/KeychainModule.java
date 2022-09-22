@@ -17,6 +17,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.oblador.keychain.PrefsStorage.ResultSet;
 import com.oblador.keychain.cipherStorage.CipherStorage;
 import com.oblador.keychain.cipherStorage.CipherStorage.DecryptionResult;
@@ -150,6 +151,12 @@ public class KeychainModule extends ReactContextBaseJavaModule {
       addCipherStorageToMap(new CipherStorageKeystoreRsaEcb());
     }
   }
+
+  @Override
+  public boolean canOverrideExistingModule() {
+    return true;
+  }
+
 
   /** Allow initialization in chain. */
   public static KeychainModule withWarming(@NonNull final ReactApplicationContext reactContext) {
@@ -338,6 +345,36 @@ public class KeychainModule extends ReactContextBaseJavaModule {
       Log.e(KEYCHAIN_MODULE, fail.getMessage(), fail);
 
       promise.reject(Errors.E_UNKNOWN_ERROR, fail);
+    }
+  }
+
+  @ReactMethod
+  public void getAllInternetCredentialsForServer(ReadableMap options, Promise promise) {
+    try {
+      WritableArray allCredentials = Arguments.createArray();
+      CipherStorage currentCipherStorage = getCipherStorageForCurrentAPILevel();
+      ArrayList<Map> allResultsets = prefsStorage.getAllEncryptedEntries();
+      for (Map data : allResultsets) {
+        ResultSet resultSet = (ResultSet) data.get("resultSet");
+        String service = (String)data.get("service");
+        final String rules = getSecurityRulesOrDefault(options);
+        final PromptInfo promptInfo = getPromptInfo(options);
+        final DecryptionResult decryptionResult = decryptCredentials(service, currentCipherStorage, resultSet, rules, promptInfo);
+        WritableMap credentials = Arguments.createMap();
+        credentials.putString("service", service);
+        credentials.putString("username", decryptionResult.username);
+        credentials.putString("password", decryptionResult.password);
+        allCredentials.pushMap(credentials);
+      }
+      WritableMap result = Arguments.createMap();
+      result.putArray("results", allCredentials);
+      promise.resolve(result);
+    } catch (KeyStoreAccessException e) {
+      Log.e(KEYCHAIN_MODULE, e.getMessage());
+      promise.reject(Errors.E_KEYSTORE_ACCESS_ERROR, e);
+    } catch (CryptoFailedException e) {
+      Log.e(KEYCHAIN_MODULE, e.getMessage());
+      promise.reject(Errors.E_CRYPTO_FAILED, e);
     }
   }
 
