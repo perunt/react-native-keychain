@@ -108,6 +108,14 @@ export type Result = {|
   +storage: string,
 |};
 
+export type AllCredentials = {|
+  results: UserCredentials[],
+|};
+
+export type AllCredentialsKeys = {|
+  results: string[],
+|};
+
 export type UserCredentials = {|
   +username: string,
   +password: string,
@@ -200,6 +208,32 @@ export function getGenericPassword(
   const options = normalizeOptions(serviceOrOptions);
   return RNKeychainManager.getGenericPasswordForOptions(options);
 }
+
+/**
+* Fetches all the keychain entries for the app
+* @param {object} options Keychain options, iOS only
+* @return {Promise} Resolves to `[{ server, username, password }, ...]` when successful
+*/
+export function getAllInternetCredentials(
+   options?: Options
+  ): Promise<false | AllCredentials> {
+   return RNKeychainManager.getAllInternetCredentialsForServer(
+     normalizeOptions(options)
+   );
+  }
+
+  /**
+  * Fetches all the keychain entries for the app
+  * @param {object} options Keychain options, iOS only
+  * @return {Promise} Resolves to `[username]` when successful
+  */
+  export function getAllInternetCredentialsKeys(
+   options?: Options
+  ): Promise<false | AllCredentialsKeys> {
+   return RNKeychainManager.getAllInternetCredentialsKeys(
+     normalizeOptions(options)
+   );
+  }
 
 /**
  * Deletes all generic password keychain entries for `service`.
