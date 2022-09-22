@@ -176,7 +176,7 @@ public class KeychainModule extends ReactContextBaseJavaModule {
       final long startTime = System.nanoTime();
 
       Log.v(KEYCHAIN_MODULE, "warming up started at " + startTime);
-      final CipherStorageBase best = (CipherStorageBase) getCipherStorageForCurrentAPILevel();
+      final CipherStorageBase best = (CipherStorageBase) getCipherStorageForCurrentAPILevelNew();
       final Cipher instance = best.getCachedInstance();
       final boolean isSecure = best.supportsSecureHardware();
       final SecurityLevel requiredLevel = isSecure ? SecurityLevel.SECURE_HARDWARE : SecurityLevel.SECURE_SOFTWARE;
@@ -272,12 +272,12 @@ public class KeychainModule extends ReactContextBaseJavaModule {
     CipherStorage result = null;
 
     if (null != cipherName) {
-      result = getCipherStorageByName(cipherName);
+      result = getCipherStorageByNameNew(cipherName);
     }
 
     // attempt to access none existing storage will force fallback logic.
     if (null == result) {
-      result = getCipherStorageForCurrentAPILevel(useBiometry);
+      result = getCipherStorageForCurrentAPILevelNew(useBiometry);
     }
 
     return result;
@@ -307,9 +307,9 @@ public class KeychainModule extends ReactContextBaseJavaModule {
         // get the best storage
         final String accessControl = getAccessControlOrDefault(options);
         final boolean useBiometry = getUseBiometry(accessControl);
-        cipher = getCipherStorageForCurrentAPILevel(useBiometry);
+        cipher = getCipherStorageForCurrentAPILevelNew(useBiometry);
       } else {
-        cipher = getCipherStorageByName(storageName);
+        cipher = getCipherStorageByNameNew(storageName);
       }
 
       CipherStorage finalCipher = cipher;
@@ -352,7 +352,7 @@ public class KeychainModule extends ReactContextBaseJavaModule {
   public void getAllInternetCredentialsForServer(ReadableMap options, Promise promise) {
     try {
       WritableArray allCredentials = Arguments.createArray();
-      CipherStorage currentCipherStorage = getCipherStorageForCurrentAPILevel();
+      CipherStorage currentCipherStorage = getCipherStorageForCurrentAPILevelNew();
       ArrayList<Map> allResultsets = prefsStorage.getAllEncryptedEntries();
       for (Map data : allResultsets) {
         ResultSet resultSet = (ResultSet) data.get("resultSet");
@@ -394,7 +394,7 @@ public class KeychainModule extends ReactContextBaseJavaModule {
 
     Collection<CipherStorage> ciphers = new ArrayList<>(cipherNames.size());
     for (String storageName : cipherNames) {
-      final CipherStorage cipherStorage = getCipherStorageByName(storageName);
+      final CipherStorage cipherStorage = getCipherStorageByNameNew(storageName);
       ciphers.add(cipherStorage);
     }
 
@@ -425,7 +425,7 @@ public class KeychainModule extends ReactContextBaseJavaModule {
       final ResultSet resultSet = prefsStorage.getEncryptedEntry(alias);
 
       if (resultSet != null) {
-        final CipherStorage cipherStorage = getCipherStorageByName(resultSet.cipherStorageName);
+        final CipherStorage cipherStorage = getCipherStorageByNameNew(resultSet.cipherStorageName);
 
         if (cipherStorage != null) {
           cipherStorage.removeKey(alias);
@@ -503,11 +503,11 @@ public class KeychainModule extends ReactContextBaseJavaModule {
       if (!DeviceAvailability.isStrongBiometricAuthAvailable(getReactApplicationContext())) {
         reply = null;
       } else {
-        if (isFingerprintAuthAvailable()) {
+        if (isFingerprintAuthAvailableNew()) {
           reply = FINGERPRINT_SUPPORTED_NAME;
-        } else if (isFaceAuthAvailable()) {
+        } else if (isFaceAuthAvailableNew()) {
           reply = FACE_SUPPORTED_NAME;
-        } else if (isIrisAuthAvailable()) {
+        } else if (isIrisAuthAvailableNew()) {
           reply = IRIS_SUPPORTED_NAME;
         }
       }
@@ -699,7 +699,7 @@ public class KeychainModule extends ReactContextBaseJavaModule {
 
     // The encrypted data is encrypted using an older CipherStorage, so we need to decrypt the data first,
     // then encrypt it using the current CipherStorage, then store it again and return
-    final CipherStorage oldStorage = getCipherStorageByName(storageName);
+    final CipherStorage oldStorage = getCipherStorageByNameNew(storageName);
     if (null == oldStorage) {
       throw new KeyStoreAccessException("Wrong cipher storage name '" + storageName + "' or cipher not available");
     }
@@ -709,7 +709,7 @@ public class KeychainModule extends ReactContextBaseJavaModule {
       if (Rules.AUTOMATIC_UPGRADE.equals(rules)) {
         try {
           // encrypt using the current cipher storage
-          migrateCipherStorage(alias, current, oldStorage, decryptionResult);
+          migrateCipherStorageNew(alias, current, oldStorage, decryptionResult);
         } catch (CryptoFailedException e) {
           Log.w(KEYCHAIN_MODULE, "Migrating to a less safe storage is not allowed. Keeping the old one");
         } catch (KeyStoreAccessException e) {
@@ -747,7 +747,7 @@ public class KeychainModule extends ReactContextBaseJavaModule {
   }
 
   /** Remove key from old storage and add it to the new storage. */
-  /* package */ void migrateCipherStorage(@NonNull final String service,
+  /* package */ void migrateCipherStorageNew(@NonNull final String service,
                                           @NonNull final CipherStorage newCipherStorage,
                                           @NonNull final CipherStorage oldCipherStorage,
                                           @NonNull final DecryptionResult decryptionResult)
@@ -771,8 +771,8 @@ public class KeychainModule extends ReactContextBaseJavaModule {
    * lower than or equal to the current API level
    */
   @NonNull
-  /* package */ CipherStorage getCipherStorageForCurrentAPILevel() throws CryptoFailedException {
-    return getCipherStorageForCurrentAPILevel(true);
+  /* package */ CipherStorage getCipherStorageForCurrentAPILevelNew() throws CryptoFailedException {
+    return getCipherStorageForCurrentAPILevelNew(true);
   }
 
   /**
@@ -780,10 +780,10 @@ public class KeychainModule extends ReactContextBaseJavaModule {
    * lower than or equal to the current API level. Parameter allow to reduce level.
    */
   @NonNull
-  /* package */ CipherStorage getCipherStorageForCurrentAPILevel(final boolean useBiometry)
+  /* package */ CipherStorage getCipherStorageForCurrentAPILevelNew(final boolean useBiometry)
     throws CryptoFailedException {
     final int currentApiLevel = Build.VERSION.SDK_INT;
-    final boolean isBiometry = useBiometry && (isFingerprintAuthAvailable() || isFaceAuthAvailable() || isIrisAuthAvailable());
+    final boolean isBiometry = useBiometry && (isFingerprintAuthAvailableNew() || isFaceAuthAvailableNew() || isIrisAuthAvailableNew());
     CipherStorage foundCipher = null;
 
     for (CipherStorage variant : cipherStorageMap.values()) {
@@ -842,29 +842,29 @@ public class KeychainModule extends ReactContextBaseJavaModule {
 
   /** Extract cipher by it unique name. {@link CipherStorage#getCipherStorageName()}. */
   @Nullable
-  /* package */ CipherStorage getCipherStorageByName(@KnownCiphers @NonNull final String knownName) {
+  /* package */ CipherStorage getCipherStorageByNameNew(@KnownCiphers @NonNull final String knownName) {
     return cipherStorageMap.get(knownName);
   }
 
   /** True - if fingerprint hardware available and configured, otherwise false. */
-  /* package */ boolean isFingerprintAuthAvailable() {
-    return DeviceAvailability.isStrongBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFingerprintAuthAvailable(getReactApplicationContext());
+  /* package */ boolean isFingerprintAuthAvailableNew() {
+    return DeviceAvailability.isStrongBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFingerprintAuthAvailableNew(getReactApplicationContext());
   }
 
   /** True - if face recognition hardware available and configured, otherwise false. */
-  /* package */ boolean isFaceAuthAvailable() {
-    return DeviceAvailability.isStrongBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFaceAuthAvailable(getReactApplicationContext());
+  /* package */ boolean isFaceAuthAvailableNew() {
+    return DeviceAvailability.isStrongBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFaceAuthAvailableNew(getReactApplicationContext());
   }
 
   /** True - if iris recognition hardware available and configured, otherwise false. */
-  /* package */ boolean isIrisAuthAvailable() {
-    return DeviceAvailability.isStrongBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isIrisAuthAvailable(getReactApplicationContext());
+  /* package */ boolean isIrisAuthAvailableNew() {
+    return DeviceAvailability.isStrongBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isIrisAuthAvailableNew(getReactApplicationContext());
   }
 
   /** Is secured hardware a part of current storage or not. */
-  /* package */ boolean isSecureHardwareAvailable() {
+  /* package */ boolean isSecureHardwareAvailableNew() {
     try {
-      return getCipherStorageForCurrentAPILevel().supportsSecureHardware();
+      return getCipherStorageForCurrentAPILevelNew().supportsSecureHardware();
     } catch (CryptoFailedException e) {
       return false;
     }
@@ -874,7 +874,7 @@ public class KeychainModule extends ReactContextBaseJavaModule {
   @NonNull
   private SecurityLevel getSecurityLevel(final boolean useBiometry) {
     try {
-      final CipherStorage storage = getCipherStorageForCurrentAPILevel(useBiometry);
+      final CipherStorage storage = getCipherStorageForCurrentAPILevelNew(useBiometry);
 
       if (!storage.securityLevel().satisfiesSafetyThreshold(SecurityLevel.SECURE_SOFTWARE)) {
         return SecurityLevel.ANY;
