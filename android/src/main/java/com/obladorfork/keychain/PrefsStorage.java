@@ -12,10 +12,7 @@ import com.obladorfork.keychain.KeychainModule.KnownCiphers;
 import com.obladorfork.keychain.cipherStorage.CipherStorage;
 import com.obladorfork.keychain.cipherStorage.CipherStorage.EncryptionResult;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
@@ -156,24 +153,5 @@ public class PrefsStorage {
     }
 
     return null;
-  }
-
-  public ArrayList<Map> getAllEncryptedEntries() {
-    ArrayList<String> processedServices = new ArrayList<String>();
-    ArrayList<Map> data  =  new ArrayList<Map>();
-    Map<String, ?> allItems = this.prefs.getAll();
-    for (Map.Entry<String, ?> entry : allItems.entrySet()) {
-        String key = entry.getKey();
-        String serviceName = key.substring(0, key.length() - 2);
-        if(!processedServices.contains(serviceName)) {
-            ResultSet item = getEncryptedEntry(serviceName);
-            HashMap<String, Object> map=new HashMap<String,Object>();
-            map.put("resultSet", item);
-            map.put("service", serviceName);
-            data.add(map);
-            processedServices.add(serviceName);
-          }
-      }
-    return data;
   }
 }
