@@ -1,4 +1,4 @@
-package com.oblador.keychain;
+package com.perunt.keychain;
 
 import java.security.Key;
 import java.security.KeyFactorySpi;

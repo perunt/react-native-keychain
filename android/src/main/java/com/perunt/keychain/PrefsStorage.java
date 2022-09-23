@@ -1,4 +1,4 @@
-package com.oblador.keychain;
+package com.perunt.keychain;
 
 import android.content.Context;
 import android.content.SharedPreferences;

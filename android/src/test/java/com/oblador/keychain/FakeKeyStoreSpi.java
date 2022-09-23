@@ -1,4 +1,4 @@
-package com.oblador.keychain;
+package com.perunt.keychain;
 
 import java.io.IOException;
 import java.io.InputStream;

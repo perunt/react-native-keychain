@@ -1,4 +1,4 @@
-package com.oblador.keychain;
+package com.perunt.keychain;
 
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
