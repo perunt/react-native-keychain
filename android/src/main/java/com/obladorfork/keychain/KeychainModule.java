@@ -17,6 +17,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.obladorfork.keychain.PrefsStorage.ResultSet;
 import com.obladorfork.keychain.cipherStorage.CipherStorage;
 import com.obladorfork.keychain.cipherStorage.CipherStorage.DecryptionResult;
@@ -149,6 +150,11 @@ public class KeychainModule extends ReactContextBaseJavaModule {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       addCipherStorageToMap(new CipherStorageKeystoreRsaEcb());
     }
+  }
+
+  @Override
+  public boolean canOverrideExistingModule() {
+    return true;
   }
 
   /** Allow initialization in chain. */
