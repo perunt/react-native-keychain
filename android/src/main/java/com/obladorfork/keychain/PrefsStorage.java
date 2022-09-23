@@ -1,4 +1,4 @@
-package com.perunt.keychain;
+package com.obladorfork.keychain;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,9 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.oblador.keychain.KeychainModule.KnownCiphers;
-import com.oblador.keychain.cipherStorage.CipherStorage;
-import com.oblador.keychain.cipherStorage.CipherStorage.EncryptionResult;
+import com.obladorfork.keychain.KeychainModule.KnownCiphers;
+import com.obladorfork.keychain.cipherStorage.CipherStorage;
+import com.obladorfork.keychain.cipherStorage.CipherStorage.EncryptionResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
