@@ -353,22 +353,25 @@ public class KeychainModule extends ReactContextBaseJavaModule {
       String service = (String)data.get("service");
       final String rules = getSecurityRulesOrDefault(options);
       final PromptInfo promptInfo = getPromptInfo(options);
-      final DecryptionResult decryptionResult = decryptCredentials(service, currentCipherStorage, resultSet, rules, promptInfo);
+      final DecryptionResult decryptionResult = decryptCredentials(service, currentCipherStorage, resultSet, rules, promptInfo).get();
       WritableMap credentials = Arguments.createMap();
       credentials.putString("service", service);
       credentials.putString("username", decryptionResult.username);
-
       WritableMap result = Arguments.createMap();
       result.putArray("results", allCredentials);
       promise.resolve(result);
-    } catch (KeyStoreAccessException e) {
-      Log.e(KEYCHAIN_MODULE, e.getMessage());
-      promise.reject(Errors.E_KEYSTORE_ACCESS_ERROR, e);
-    } catch (CryptoFailedException e) {
-      Log.e(KEYCHAIN_MODULE, e.getMessage());
-      promise.reject(Errors.E_CRYPTO_FAILED, e);
-    }
-  }
+     } catch (KeyStoreAccessException e) {
+       Log.e(KEYCHAIN_MODULE, e.getMessage());
+       promise.reject(Errors.E_KEYSTORE_ACCESS_ERROR, e);
+     } catch (CryptoFailedException e) {
+       Log.e(KEYCHAIN_MODULE, e.getMessage());
+       promise.reject(Errors.E_CRYPTO_FAILED, e);
+    } catch (ExecutionException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+     }
+   }
 
   @ReactMethod
   public void getAllGenericPasswordServices(@NonNull final Promise promise) {
