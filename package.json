@@ -1,6 +1,6 @@
 {
   "name": "react-native-keychain-new",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "description": "Keychain Access for React Native",
   "main": "index.js",
   "files": [
@@ -35,9 +35,9 @@
     "url": "https://github.com/oblador/react-native-keychain/issues"
   },
   "typescript": {
-    "definition": "typings/react-native-keychain.d.ts"
+    "definition": "typings/react-native-keychain-new.d.ts"
   },
-  "types": "typings/react-native-keychain.d.ts",
+  "types": "typings/react-native-keychain-new.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/oblador/react-native-keychain.git"
