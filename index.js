@@ -1,18 +1,18 @@
 // @flow
 import { NativeModules, Platform } from 'react-native';
 
-const { RNKeychainManager } = NativeModules;
+const { RNKeychainManagerNew } = NativeModules;
 
 export const SECURITY_LEVEL: {
   ANY: string,
   SECURE_SOFTWARE: string,
   SECURE_HARDWARE: string,
 } = Object.freeze({
-  ANY: RNKeychainManager && RNKeychainManager.SECURITY_LEVEL_ANY,
+  ANY: RNKeychainManagerNew && RNKeychainManagerNew.SECURITY_LEVEL_ANY,
   SECURE_SOFTWARE:
-    RNKeychainManager && RNKeychainManager.SECURITY_LEVEL_SECURE_SOFTWARE,
+    RNKeychainManagerNew && RNKeychainManagerNew.SECURITY_LEVEL_SECURE_SOFTWARE,
   SECURE_HARDWARE:
-    RNKeychainManager && RNKeychainManager.SECURITY_LEVEL_SECURE_HARDWARE,
+    RNKeychainManagerNew && RNKeychainManagerNew.SECURITY_LEVEL_SECURE_HARDWARE,
 });
 
 export const ACCESSIBLE = Object.freeze({
@@ -190,7 +190,7 @@ export function setGenericPassword(
   serviceOrOptions?: string | Options
 ): Promise<false | Result> {
   const options = normalizeOptions(serviceOrOptions);
-  return RNKeychainManager.setGenericPasswordForOptions(
+  return RNKeychainManagerNew.setGenericPasswordForOptions(
     options,
     username,
     password
@@ -206,7 +206,7 @@ export function getGenericPassword(
   serviceOrOptions?: string | Options
 ): Promise<false | UserCredentials> {
   const options = normalizeOptions(serviceOrOptions);
-  return RNKeychainManager.getGenericPasswordForOptions(options);
+  return RNKeychainManagerNew.getGenericPasswordForOptions(options);
 }
 
 /**
@@ -217,7 +217,7 @@ export function getGenericPassword(
 export function getAllInternetCredentials(
   options?: Options
 ): Promise<false | AllCredentials> {
-  return RNKeychainManager.getAllInternetCredentialsForServer(
+  return RNKeychainManagerNew.getAllInternetCredentialsForServer(
     normalizeOptions(options)
   );
 }
@@ -230,7 +230,7 @@ export function getAllInternetCredentials(
 export function getAllInternetCredentialsKeys(
   options?: Options
 ): Promise<false | AllCredentialsKeys> {
-  return RNKeychainManager.getAllInternetCredentialsKeys(
+  return RNKeychainManagerNew.getAllInternetCredentialsKeys(
     normalizeOptions(options)
   );
 }
@@ -244,7 +244,7 @@ export function resetGenericPassword(
   serviceOrOptions?: string | Options
 ): Promise<boolean> {
   const options = normalizeOptions(serviceOrOptions);
-  return RNKeychainManager.resetGenericPasswordForOptions(options);
+  return RNKeychainManagerNew.resetGenericPasswordForOptions(options);
 }
 
 /**
@@ -252,7 +252,7 @@ export function resetGenericPassword(
  * @return {Promise} Resolves to an array of strings
  */
 export function getAllGenericPasswordServices(): Promise<string[]> {
-  return RNKeychainManager.getAllGenericPasswordServices();
+  return RNKeychainManagerNew.getAllGenericPasswordServices();
 }
 
 /**
@@ -263,7 +263,7 @@ export function getAllGenericPasswordServices(): Promise<string[]> {
 export function hasInternetCredentials(
   server: string
 ): Promise<false | Result> {
-  return RNKeychainManager.hasInternetCredentialsForServer(server);
+  return RNKeychainManagerNew.hasInternetCredentialsForServer(server);
 }
 
 /**
@@ -280,7 +280,7 @@ export function setInternetCredentials(
   password: string,
   options?: Options
 ): Promise<false | Result> {
-  return RNKeychainManager.setInternetCredentialsForServer(
+  return RNKeychainManagerNew.setInternetCredentialsForServer(
     server,
     username,
     password,
@@ -298,7 +298,7 @@ export function getInternetCredentials(
   server: string,
   options?: Options
 ): Promise<false | UserCredentials> {
-  return RNKeychainManager.getInternetCredentialsForServer(
+  return RNKeychainManagerNew.getInternetCredentialsForServer(
     server,
     normalizeOptions(options)
   );
@@ -311,7 +311,7 @@ export function getInternetCredentials(
  * @return {Promise} Resolves to `true` when successful
  */
 export function resetInternetCredentials(server: string): Promise<void> {
-  return RNKeychainManager.resetInternetCredentialsForServer(server);
+  return RNKeychainManagerNew.resetInternetCredentialsForServer(server);
 }
 
 /**
@@ -320,11 +320,11 @@ export function resetInternetCredentials(server: string): Promise<void> {
  * @return {Promise} Resolves to a `BIOMETRY_TYPE` when supported, otherwise `null`
  */
 export function getSupportedBiometryType(): Promise<null | SecBiometryType> {
-  if (!RNKeychainManager.getSupportedBiometryType) {
+  if (!RNKeychainManagerNew.getSupportedBiometryType) {
     return Promise.resolve(null);
   }
 
-  return RNKeychainManager.getSupportedBiometryType();
+  return RNKeychainManagerNew.getSupportedBiometryType();
 }
 
 //* IOS ONLY */
@@ -344,7 +344,7 @@ export function requestSharedWebCredentials(): Promise<
       )
     );
   }
-  return RNKeychainManager.requestSharedWebCredentials();
+  return RNKeychainManagerNew.requestSharedWebCredentials();
 }
 
 /**
@@ -366,7 +366,7 @@ export function setSharedWebCredentials(
       )
     );
   }
-  return RNKeychainManager.setSharedWebCredentialsForServer(
+  return RNKeychainManagerNew.setSharedWebCredentialsForServer(
     server,
     username,
     password
@@ -380,10 +380,10 @@ export function setSharedWebCredentials(
  * @return {Promise} Resolves to `true` when supported, otherwise `false`
  */
 export function canImplyAuthentication(options?: Options): Promise<boolean> {
-  if (!RNKeychainManager.canCheckAuthentication) {
+  if (!RNKeychainManagerNew.canCheckAuthentication) {
     return Promise.resolve(false);
   }
-  return RNKeychainManager.canCheckAuthentication(options);
+  return RNKeychainManagerNew.canCheckAuthentication(options);
 }
 
 //* ANDROID ONLY */
@@ -397,10 +397,10 @@ export function canImplyAuthentication(options?: Options): Promise<boolean> {
 export function getSecurityLevel(
   options?: Options
 ): Promise<null | SecMinimumLevel> {
-  if (!RNKeychainManager.getSecurityLevel) {
+  if (!RNKeychainManagerNew.getSecurityLevel) {
     return Promise.resolve(null);
   }
-  return RNKeychainManager.getSecurityLevel(options);
+  return RNKeychainManagerNew.getSecurityLevel(options);
 }
 
 /** Refs: https://www.saltycrane.com/cheat-sheets/flow-type/latest/ */

@@ -50,7 +50,7 @@ import static com.facebook.react.bridge.Arguments.makeNativeArray;
 @SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue"})
 public class KeychainModule extends ReactContextBaseJavaModule {
   //region Constants
-  public static final String KEYCHAIN_MODULE = "RNKeychainManager";
+  public static final String KEYCHAIN_MODULE = "RNKeychainManagerNew";
   public static final String FINGERPRINT_SUPPORTED_NAME = "Fingerprint";
   public static final String FACE_SUPPORTED_NAME = "Face";
   public static final String IRIS_SUPPORTED_NAME = "Iris";

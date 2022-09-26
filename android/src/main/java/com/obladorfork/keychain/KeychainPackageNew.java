@@ -12,15 +12,15 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class KeychainPackage implements ReactPackage {
+public class KeychainPackageNew implements ReactPackage {
 
-  private final KeychainModuleBuilder builder;
+  private final KeychainModuleBuilderNew builder;
 
-  public KeychainPackage() {
-    this(new KeychainModuleBuilder());
+  public KeychainPackageNew() {
+    this(new KeychainModuleBuilderNew());
   }
 
-  public KeychainPackage(KeychainModuleBuilder builder) {
+  public KeychainPackageNew(KeychainModuleBuilderNew builder) {
     this.builder = builder;
   }
 

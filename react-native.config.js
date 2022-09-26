@@ -5,8 +5,9 @@ module.exports = {
     platforms: {
       ios: { podspecPath: path.join(__dirname, 'RNKeychain.podspec') },
       android: {
-        packageImportPath: 'import com.oblador.keychain.KeychainPackage;',
-        packageInstance: 'new KeychainPackage()',
+        packageImportPath:
+          'import com.obladorfork.keychain.KeychainPackageNew;',
+        packageInstance: 'new KeychainPackageNew()',
       },
     },
   },

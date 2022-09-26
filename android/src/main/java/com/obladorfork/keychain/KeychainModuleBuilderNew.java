@@ -2,23 +2,23 @@ package com.obladorfork.keychain;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 
-public class KeychainModuleBuilder {
+public class KeychainModuleBuilderNew {
   public static final boolean DEFAULT_USE_WARM_UP = true;
 
   private ReactApplicationContext reactContext;
   private boolean useWarmUp = DEFAULT_USE_WARM_UP;
 
-  public KeychainModuleBuilder withReactContext(ReactApplicationContext reactContext) {
+  public KeychainModuleBuilderNew withReactContext(ReactApplicationContext reactContext) {
     this.reactContext = reactContext;
     return this;
   }
 
-  public KeychainModuleBuilder usingWarmUp() {
+  public KeychainModuleBuilderNew usingWarmUp() {
     useWarmUp = true;
     return this;
   }
 
-  public KeychainModuleBuilder withoutWarmUp() {
+  public KeychainModuleBuilderNew withoutWarmUp() {
     useWarmUp = false;
     return this;
   }
