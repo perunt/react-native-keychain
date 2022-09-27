@@ -1,4 +1,4 @@
-declare module 'react-native-keychain-new' {
+declare module 'react-native-keychain-android-new' {
   export interface Result {
     service: string;
     storage: string;
