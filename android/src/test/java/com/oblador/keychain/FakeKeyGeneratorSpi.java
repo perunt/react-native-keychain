@@ -1,4 +1,4 @@
-package com.perunt.keychain;
+package com.obladorfork.keychain;
 
 import javax.crypto.KeyGeneratorSpi;
 import javax.crypto.SecretKey;

@@ -1,4 +1,4 @@
-package com.oblador.keychain.cipherStorage;
+package com.obladorfork.keychain.cipherStorage;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -8,8 +8,8 @@ import android.os.Build;
 import androidx.biometric.BiometricManager;
 
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.oblador.keychain.FakeProvider;
-import com.oblador.keychain.SecurityLevel;
+import com.obladorfork.keychain.FakeProvider;
+import com.obladorfork.keychain.SecurityLevel;
 
 import org.junit.After;
 import org.junit.Before;

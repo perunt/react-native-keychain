@@ -1,4 +1,4 @@
-package com.oblador.keychain.decryptionHandler;
+package com.obladorfork.keychain.decryptionHandler;
 
 import android.Manifest;
 import android.app.KeyguardManager;
@@ -8,10 +8,10 @@ import android.os.Build;
 import androidx.biometric.BiometricPrompt;
 
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.oblador.keychain.cipherStorage.CipherStorage;
-import com.oblador.keychain.cipherStorage.CipherStorageBase;
-import com.oblador.keychain.cipherStorage.CipherStorageKeystoreRsaEcb;
-import com.oblador.keychain.exceptions.CryptoFailedException;
+import com.obladorfork.keychain.cipherStorage.CipherStorage;
+import com.obladorfork.keychain.cipherStorage.CipherStorageBase;
+import com.obladorfork.keychain.cipherStorage.CipherStorageKeystoreRsaEcb;
+import com.obladorfork.keychain.exceptions.CryptoFailedException;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
