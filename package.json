@@ -7,7 +7,7 @@
     "android",
     "!android/src/test",
     "RNKeychain.xcodeproj",
-    "RNKeychainManagerNew",
+    "RNKeychainManagerAndroidNew",
     "typings",
     "RNKeychain.podspec"
   ],

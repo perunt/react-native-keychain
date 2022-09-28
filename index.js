@@ -1,18 +1,22 @@
 // @flow
 import { NativeModules, Platform } from 'react-native';
 
-const { RNKeychainManagerNew } = NativeModules;
+const { RNKeychainManagerAndroidNew } = NativeModules;
 
 export const SECURITY_LEVEL: {
   ANY: string,
   SECURE_SOFTWARE: string,
   SECURE_HARDWARE: string,
 } = Object.freeze({
-  ANY: RNKeychainManagerNew && RNKeychainManagerNew.SECURITY_LEVEL_ANY,
+  ANY:
+    RNKeychainManagerAndroidNew &&
+    RNKeychainManagerAndroidNew.SECURITY_LEVEL_ANY,
   SECURE_SOFTWARE:
-    RNKeychainManagerNew && RNKeychainManagerNew.SECURITY_LEVEL_SECURE_SOFTWARE,
+    RNKeychainManagerAndroidNew &&
+    RNKeychainManagerAndroidNew.SECURITY_LEVEL_SECURE_SOFTWARE,
   SECURE_HARDWARE:
-    RNKeychainManagerNew && RNKeychainManagerNew.SECURITY_LEVEL_SECURE_HARDWARE,
+    RNKeychainManagerAndroidNew &&
+    RNKeychainManagerAndroidNew.SECURITY_LEVEL_SECURE_HARDWARE,
 });
 
 export const ACCESSIBLE = Object.freeze({
@@ -190,7 +194,7 @@ export function setGenericPassword(
   serviceOrOptions?: string | Options
 ): Promise<false | Result> {
   const options = normalizeOptions(serviceOrOptions);
-  return RNKeychainManagerNew.setGenericPasswordForOptions(
+  return RNKeychainManagerAndroidNew.setGenericPasswordForOptions(
     options,
     username,
     password
@@ -206,7 +210,7 @@ export function getGenericPassword(
   serviceOrOptions?: string | Options
 ): Promise<false | UserCredentials> {
   const options = normalizeOptions(serviceOrOptions);
-  return RNKeychainManagerNew.getGenericPasswordForOptions(options);
+  return RNKeychainManagerAndroidNew.getGenericPasswordForOptions(options);
 }
 
 /**
@@ -217,7 +221,7 @@ export function getGenericPassword(
 export function getAllInternetCredentials(
   options?: Options
 ): Promise<false | AllCredentials> {
-  return RNKeychainManagerNew.getAllInternetCredentialsForServer(
+  return RNKeychainManagerAndroidNew.getAllInternetCredentialsForServer(
     normalizeOptions(options)
   );
 }
@@ -230,7 +234,7 @@ export function getAllInternetCredentials(
 export function getAllInternetCredentialsKeys(
   options?: Options
 ): Promise<false | AllCredentialsKeys> {
-  return RNKeychainManagerNew.getAllInternetCredentialsKeys(
+  return RNKeychainManagerAndroidNew.getAllInternetCredentialsKeys(
     normalizeOptions(options)
   );
 }
@@ -244,7 +248,7 @@ export function resetGenericPassword(
   serviceOrOptions?: string | Options
 ): Promise<boolean> {
   const options = normalizeOptions(serviceOrOptions);
-  return RNKeychainManagerNew.resetGenericPasswordForOptions(options);
+  return RNKeychainManagerAndroidNew.resetGenericPasswordForOptions(options);
 }
 
 /**
@@ -252,7 +256,7 @@ export function resetGenericPassword(
  * @return {Promise} Resolves to an array of strings
  */
 export function getAllGenericPasswordServices(): Promise<string[]> {
-  return RNKeychainManagerNew.getAllGenericPasswordServices();
+  return RNKeychainManagerAndroidNew.getAllGenericPasswordServices();
 }
 
 /**
@@ -263,7 +267,7 @@ export function getAllGenericPasswordServices(): Promise<string[]> {
 export function hasInternetCredentials(
   server: string
 ): Promise<false | Result> {
-  return RNKeychainManagerNew.hasInternetCredentialsForServer(server);
+  return RNKeychainManagerAndroidNew.hasInternetCredentialsForServer(server);
 }
 
 /**
@@ -280,7 +284,7 @@ export function setInternetCredentials(
   password: string,
   options?: Options
 ): Promise<false | Result> {
-  return RNKeychainManagerNew.setInternetCredentialsForServer(
+  return RNKeychainManagerAndroidNew.setInternetCredentialsForServer(
     server,
     username,
     password,
@@ -298,7 +302,7 @@ export function getInternetCredentials(
   server: string,
   options?: Options
 ): Promise<false | UserCredentials> {
-  return RNKeychainManagerNew.getInternetCredentialsForServer(
+  return RNKeychainManagerAndroidNew.getInternetCredentialsForServer(
     server,
     normalizeOptions(options)
   );
@@ -311,7 +315,7 @@ export function getInternetCredentials(
  * @return {Promise} Resolves to `true` when successful
  */
 export function resetInternetCredentials(server: string): Promise<void> {
-  return RNKeychainManagerNew.resetInternetCredentialsForServer(server);
+  return RNKeychainManagerAndroidNew.resetInternetCredentialsForServer(server);
 }
 
 /**
@@ -320,11 +324,11 @@ export function resetInternetCredentials(server: string): Promise<void> {
  * @return {Promise} Resolves to a `BIOMETRY_TYPE` when supported, otherwise `null`
  */
 export function getSupportedBiometryType(): Promise<null | SecBiometryType> {
-  if (!RNKeychainManagerNew.getSupportedBiometryType) {
+  if (!RNKeychainManagerAndroidNew.getSupportedBiometryType) {
     return Promise.resolve(null);
   }
 
-  return RNKeychainManagerNew.getSupportedBiometryType();
+  return RNKeychainManagerAndroidNew.getSupportedBiometryType();
 }
 
 //* IOS ONLY */
@@ -344,7 +348,7 @@ export function requestSharedWebCredentials(): Promise<
       )
     );
   }
-  return RNKeychainManagerNew.requestSharedWebCredentials();
+  return RNKeychainManagerAndroidNew.requestSharedWebCredentials();
 }
 
 /**
@@ -366,7 +370,7 @@ export function setSharedWebCredentials(
       )
     );
   }
-  return RNKeychainManagerNew.setSharedWebCredentialsForServer(
+  return RNKeychainManagerAndroidNew.setSharedWebCredentialsForServer(
     server,
     username,
     password
@@ -380,10 +384,10 @@ export function setSharedWebCredentials(
  * @return {Promise} Resolves to `true` when supported, otherwise `false`
  */
 export function canImplyAuthentication(options?: Options): Promise<boolean> {
-  if (!RNKeychainManagerNew.canCheckAuthentication) {
+  if (!RNKeychainManagerAndroidNew.canCheckAuthentication) {
     return Promise.resolve(false);
   }
-  return RNKeychainManagerNew.canCheckAuthentication(options);
+  return RNKeychainManagerAndroidNew.canCheckAuthentication(options);
 }
 
 //* ANDROID ONLY */
@@ -397,10 +401,10 @@ export function canImplyAuthentication(options?: Options): Promise<boolean> {
 export function getSecurityLevel(
   options?: Options
 ): Promise<null | SecMinimumLevel> {
-  if (!RNKeychainManagerNew.getSecurityLevel) {
+  if (!RNKeychainManagerAndroidNew.getSecurityLevel) {
     return Promise.resolve(null);
   }
-  return RNKeychainManagerNew.getSecurityLevel(options);
+  return RNKeychainManagerAndroidNew.getSecurityLevel(options);
 }
 
 /** Refs: https://www.saltycrane.com/cheat-sheets/flow-type/latest/ */
