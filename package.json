@@ -1,6 +1,6 @@
 {
   "name": "react-native-keychain-android-new",
-  "version": "8.4.0",
+  "version": "9.0.0",
   "description": "Keychain Access for React Native",
   "main": "index.js",
   "files": [
